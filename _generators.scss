@@ -1,0 +1,113 @@
+@mixin generateSelectorSharedStyles {
+  $selector_list: null;
+  @each $selector, $severity, $message in $selectors {
+    @if $selector != '' and $selector != null {
+      $this_selector: null;
+      @if type-of($selector) == list {
+        $these_selectors: null;
+        @each $selector, $pseudo in $selector {
+          $these_selectors: append($these_selectors, #{$selector}#{$pseudo}, 'comma');
+        }
+        $this_selector: append($this_selector, #{$these_selectors}, 'comma');
+      }
+      @else {
+        $this_selector: append($this_selector, "#{$selector}:after", 'comma');
+      }
+      $selector_list: append($selector_list, #{$this_selector}, 'comma');
+    }
+  }
+  @if $selector_list != null {
+    #{$selector_list} {
+      border: 1px solid map-get($colors, 'black');
+      color: map-get($colors, 'black');
+      display: block;
+      font-family: helvetica;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: bold;
+      line-height: 1.3em;
+      padding: .1em .3em;
+      position: absolute;
+      text-decoration: none;
+      text-transform: none;
+      z-index: 99999;
+    }
+  }
+}
+
+@mixin generateMessageCounters {
+  @each $level in $warnLevels {
+    $selector_list: null;
+    @each $selector, $severity, $message in $selectors {
+      @if $severity == $level and $selector != '' and $selector != null {
+        $this_selector: null;
+        @if type-of($selector) == list {
+          $these_selectors: null;
+          @each $selector, $pseudo in $selector {
+            $these_selectors: append($these_selectors, #{$selector}, 'comma');
+          }
+          $this_selector: append($this_selector, #{$these_selectors}, 'comma');
+        }
+        @else {
+          $this_selector: append($this_selector, #{$selector}, 'comma');
+        }
+        $selector_list: append($selector_list, #{$this_selector}, 'comma');
+      }
+    }
+    @if $selector_list != null {
+      #{$selector_list} {
+        counter-increment: unquote(#{$level});
+        outline: 5px solid map-get($colors, $level);
+      }
+    }
+  }
+  body {
+    counter-reset: #{$warnLevels};
+    &:after {
+      background: map-get($colors, white);
+      content: 'Errors: ' counter(error) ' | Warnings: ' counter(warning) ' | Notices: ' counter(notice);
+      font-size: 125%;
+      right: 1em;
+      outline: 5px solid map-get($colors, black);
+      position: fixed;
+      bottom: 1em;
+    }
+  }
+}
+
+@mixin generatePerSelectorStyles {
+  @each $selector, $severity, $message in $selectors {
+    @if $selector != '' and $selector != null {
+      $this_selector: null;
+      @if type-of($selector) == list {
+        $these_selectors: null;
+        @each $selector, $pseudo in $selector {
+          $these_selectors: append($these_selectors, #{$selector}#{$pseudo}, 'comma');
+        }
+        $this_selector: append($this_selector, #{$these_selectors}, 'comma');
+      }
+      @else {
+        $this_selector: append($this_selector, "#{$selector}:after", 'comma');
+      }
+      $this_selector: append($this_selector, #{$this_selector}, 'comma');
+
+      @if $this_selector != null {
+        #{$this_selector} {
+          background: map-get($colors, $severity);
+          content: $message;
+        }
+      }
+    }
+  }
+}
+
+@mixin generateAdditionalDebugStyles {
+  body > img:only-child {
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgAgMAAAAOFJJnAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAAlQTFRF/+Pj2tra2dnZ4Z9gVgAAAHxJREFUGBkFwUGKxDAQBDB9shqcuw2T/3TAc5+A95UruZv+IoNqvEWCavLFDB2M5vPgGpyFNOcB80cPJMxgHhLkQ4IxuBorpDA3Y+MazEfC2+gwgnOxHnSogb15F1JcGxmkcBb1AwlVqCIHadZGwt+NGmQhD1lIuB+scOUfnCk3BP0u5SsAAAAASUVORK5CYII=");
+    border: 50px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    display: block;
+    margin: 1em auto;
+    padding: 0;
+  }
+}
