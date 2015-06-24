@@ -12,7 +12,9 @@ To use this, you can either embed the `debugCSS.css` in your project, to see if 
 
 Or you could use the handy bookmarklet to try it out on any site:
 
-[debugCSS](javascript:(function(d,i,l){l=d.getElementById(i);if(l){l.parentNode.removeChild(l);return;}l=d.createElement('link');l.id=i;l.rel='stylesheet';l.type='text/css';l.href='https://blog.omgmog.net/debugCSS.scss/debugCSS.css';d.getElementsByTagName('head')[0].appendChild(l);}(document,'debugCSS')))
+``` javascript
+javascript:(function(d,i,l){l=d.getElementById(i);if(l){l.parentNode.removeChild(l);return;}l=d.createElement('link');l.id=i;l.rel='stylesheet';l.type='text/css';l.href='https://blog.omgmog.net/debugCSS.scss/debugCSS.css';d.getElementsByTagName('head')[0].appendChild(l);}(document,'debugCSS'))
+```
 
 
 ## License
